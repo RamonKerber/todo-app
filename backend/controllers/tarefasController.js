@@ -1,4 +1,4 @@
-const tarefas = require("../data/tarefas");
+const tarefas = require("../data/tarefasData");
 
 function listarTarefas(req, res) {
     res.json({
