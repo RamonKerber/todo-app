@@ -1,80 +1,91 @@
-const tarefas = require("../data/tarefasData");
+const Task = require("../models/Task");
 
-function listarTarefas(req, res) {
-    res.json({
-        status: 200,
-        dados: tarefas
-    });
+async function listarTarefas(req,res){
+
+try{
+
+const tarefas = await Task.find({userId:req.userId});
+
+res.json({dados:tarefas});
+
+}catch(err){
+
+res.status(500).json({erro:"Erro ao buscar tarefas"});
+
 }
 
-function criarTarefa(req, res) {
-    const { titulo } = req.body;
-
-    if (!titulo) {
-        return res.status(400).json({
-            mensagem: "Título é obrigatório"
-        });
-    }
-
-    const novoId = tarefas.length > 0
-        ? Math.max(...tarefas.map(t => t.id)) + 1
-        : 1;
-
-    const novaTarefa = {
-        id: novoId,
-        titulo,
-        concluida: false
-    };
-
-    tarefas.push(novaTarefa);
-
-    res.status(201).json({
-        mensagem: "Tarefa criada",
-        dados: novaTarefa
-    });
 }
 
-function concluirTarefa(req, res) {
-    const id = parseInt(req.params.id);
+async function criarTarefa(req,res){
 
-    const tarefa = tarefas.find(t => t.id === id);
+try{
 
-    if (!tarefa) {
-        return res.status(404).json({
-            mensagem: "Tarefa não encontrada"
-        });
-    }
+const {titulo} = req.body;
 
-    tarefa.concluida = true;
+const tarefa = new Task({
+titulo,
+userId:req.userId
+});
 
-    res.json({
-        mensagem: "Tarefa concluída",
-        dados: tarefa
-    });
+await tarefa.save();
+
+res.json(tarefa);
+
+}catch(err){
+
+res.status(500).json({erro:"Erro ao criar tarefa"});
+
 }
 
-function deletarTarefa(req, res) {
-    const id = parseInt(req.params.id);
+}
 
-    const index = tarefas.findIndex(t => t.id === id);
+async function concluirTarefa(req,res){
 
-    if (index === -1) {
-        return res.status(404).json({
-            mensagem: "Tarefa não encontrada"
-        });
-    }
+try{
 
-    const removida = tarefas.splice(index, 1);
+const {id} = req.params;
 
-    res.json({
-        mensagem: "Tarefa removida",
-        dados: removida[0]
-    });
+const tarefa = await Task.findOne({_id:id,userId:req.userId});
+
+if(!tarefa){
+return res.status(404).json({erro:"Tarefa não encontrada"});
+}
+
+tarefa.concluida = !tarefa.concluida;
+
+await tarefa.save();
+
+res.json(tarefa);
+
+}catch(err){
+
+res.status(500).json({erro:"Erro ao concluir tarefa"});
+
+}
+
+}
+
+async function deletarTarefa(req,res){
+
+try{
+
+const {id} = req.params;
+
+await Task.deleteOne({_id:id,userId:req.userId});
+
+res.json({mensagem:"Tarefa deletada"});
+
+}catch(err){
+
+res.status(500).json({erro:"Erro ao deletar tarefa"});
+
+}
+
 }
 
 module.exports = {
-    listarTarefas,
-    criarTarefa,
-    concluirTarefa,
-    deletarTarefa
+listarTarefas,
+criarTarefa,
+concluirTarefa,
+deletarTarefa
 };

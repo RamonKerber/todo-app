@@ -5,6 +5,9 @@ async function carregarTarefas(){
 const resposta = await fetch(api);
 const dados = await resposta.json();
 
+document.getElementById("contador").innerText =
+`${dados.dados.length} tarefas`;
+
 const lista = document.getElementById("listaTarefas");
 lista.innerHTML="";
 
@@ -48,6 +51,7 @@ titulo:input.value
 });
 
 input.value="";
+input.focus();
 carregarTarefas();
 
 }
