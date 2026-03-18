@@ -1,91 +1,67 @@
 const Task = require("../models/Task");
 
-async function listarTarefas(req,res){
+async function listarTarefas(req, res) {
+  try {
+    const tarefas = await Task.find({ userId: req.userId });
 
-try{
-
-const tarefas = await Task.find({userId:req.userId});
-
-res.json({dados:tarefas});
-
-}catch(err){
-
-res.status(500).json({erro:"Erro ao buscar tarefas"});
-
+    res.json({ dados: tarefas });
+  } catch (err) {
+    res.status(500).json({ erro: "Erro ao buscar tarefas" });
+  }
 }
 
+async function criarTarefa(req, res) {
+  try {
+    const { titulo } = req.body;
+
+    const tarefa = new Task({
+      titulo,
+      userId: req.userId,
+    });
+
+    await tarefa.save();
+
+    res.json(tarefa);
+  } catch (err) {
+    res.status(500).json({ erro: "Erro ao criar tarefa" });
+  }
 }
 
-async function criarTarefa(req,res){
+async function concluirTarefa(req, res) {
+  try {
+    const { id } = req.params;
 
-try{
+    const tarefa = await Task.findOne({ _id: id, userId: req.userId });
 
-const {titulo} = req.body;
+    if (!tarefa) {
+      return res.status(404).json({ erro: "Tarefa não encontrada" });
+    }
 
-const tarefa = new Task({
-titulo,
-userId:req.userId
-});
+    tarefa.concluida = !tarefa.concluida;
 
-await tarefa.save();
+    await tarefa.save();
 
-res.json(tarefa);
-
-}catch(err){
-
-res.status(500).json({erro:"Erro ao criar tarefa"});
-
+    res.json(tarefa);
+  } catch (err) {
+    res.status(500).json({ erro: "Erro ao concluir tarefa" });
+  }
 }
 
-}
+async function deletarTarefa(req, res) {
+  try {
+    const { id } = req.params;
 
-async function concluirTarefa(req,res){
+    await Task.deleteOne({ _id: id, userId: req.userId });
 
-try{
-
-const {id} = req.params;
-
-const tarefa = await Task.findOne({_id:id,userId:req.userId});
-
-if(!tarefa){
-return res.status(404).json({erro:"Tarefa não encontrada"});
-}
-
-tarefa.concluida = !tarefa.concluida;
-
-await tarefa.save();
-
-res.json(tarefa);
-
-}catch(err){
-
-res.status(500).json({erro:"Erro ao concluir tarefa"});
-
-}
-
-}
-
-async function deletarTarefa(req,res){
-
-try{
-
-const {id} = req.params;
-
-await Task.deleteOne({_id:id,userId:req.userId});
-
-res.json({mensagem:"Tarefa deletada"});
-
-}catch(err){
-
-res.status(500).json({erro:"Erro ao deletar tarefa"});
-
-}
-
+    res.json({ mensagem: "Tarefa deletada" });
+  } catch (err) {
+    res.status(500).json({ erro: "Erro ao deletar tarefa" });
+  }
 }
 
 module.exports = {
-listarTarefas,
-criarTarefa,
-concluirTarefa,
-deletarTarefa
+  listarTarefas,
+  criarTarefa,
+  concluirTarefa,
+  deletarTarefa,
 };

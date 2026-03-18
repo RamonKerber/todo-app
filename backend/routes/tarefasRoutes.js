@@ -4,10 +4,10 @@ const router = express.Router();
 const verificarToken = require("../middleware/authMiddleware");
 
 const {
-    listarTarefas,
-    criarTarefa,
-    concluirTarefa,
-    deletarTarefa
+  listarTarefas,
+  criarTarefa,
+  concluirTarefa,
+  deletarTarefa,
 } = require("../controllers/tarefasController");
 
 router.get("/", verificarToken, listarTarefas);

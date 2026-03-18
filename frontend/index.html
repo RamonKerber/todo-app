@@ -1,33 +1,43 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-<meta charset="UTF-8">
-<title>To-Do App</title>
+  <head>
+    <meta charset="UTF-8" />
+    <title>To-Do App</title>
 
-<link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css" />
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-</head>
+  <body>
+    <div class="container">
+      <div class="topo">
+        <h1>📝 Minhas Tarefas</h1>
+        <button class="logout-btn" onclick="logout()">Sair</button>
+      </div>
 
-<body>
+      <p id="contador"></p>
 
-<div class="container">
+      <div class="input-area">
+        <input
+          id="novaTarefa"
+          type="text"
+          placeholder="Digite uma nova tarefa..."
+        />
 
-<h1>📝 Minhas Tarefas</h1>
-<p id="contador"></p>
+        <button onclick="adicionarTarefa()">Adicionar</button>
+      </div>
 
-<div class="input-area">
-<input id="novaTarefa" type="text" placeholder="Digite uma nova tarefa...">
-<button onclick="adicionarTarefa()">Adicionar</button>
-</div>
+      <p id="loading" style="display: none">Carregando...</p>
 
-<ul id="listaTarefas"></ul>
+      <ul id="listaTarefas"></ul>
+    </div>
 
-</div>
+    <div id="toast"></div>
 
-<script src="script.js"></script>
-
-</body>
+    <script src="script.js"></script>
+  </body>
 </html>

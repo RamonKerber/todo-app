@@ -14,8 +14,8 @@ conectarDB();
 const tarefasRoutes = require("./routes/tarefasRoutes");
 
 app.use("/tarefas", tarefasRoutes);
-app.use("/auth",authRoutes);
+app.use("/auth", authRoutes);
 
 app.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
+  console.log("Servidor rodando na porta 3000");
 });
