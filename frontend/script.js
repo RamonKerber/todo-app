@@ -4,7 +4,7 @@ if (!token) {
   window.location.href = "login.html";
 }
 
-const api = "http://localhost:3000/tarefas";
+const api = "https://todo-app-3pva.onrender.com/tarefas";
 
 async function carregarTarefas() {
   document.getElementById("loading").style.display = "block";
