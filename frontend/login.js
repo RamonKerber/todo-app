@@ -15,7 +15,6 @@ async function login() {
   if (dados.token) {
     localStorage.setItem("token", dados.token);
 
-    // redireciona
     window.location.href = "index.html";
   } else {
     document.getElementById("erro").innerText = "Login inválido";
